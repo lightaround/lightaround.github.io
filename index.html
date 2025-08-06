@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Light Around 🌍</title>
+  <link rel="icon" href="icon.png" type="image/png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0 auto;
+      max-width: 900px;
+      padding: 2rem 1.5rem 3rem;
+      background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+      color: #e0e7ff;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1 {
+      font-weight: 700;
+      text-align: center;
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .spacer {
+      height: 0.5rem;
+    }
+
+    .header-image {
+      display: block;
+      margin: 1rem auto 2.5rem;
+      max-width: 150px;
+      border-radius: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .header-image:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    p,
+    li,
+    code {
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    li {
+      line-height: 2;
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+      margin: 2rem 0;
+      border-radius: 24px;
+      border: 1px solid rgba(255 255 255 / 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      background-color: #14213d;
+      transition: box-shadow 0.3s ease;
+    }
+
+    #map:hover {
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.8);
+    }
+
+    .instructions {
+      background: #1e293b;
+      padding: 1.5rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255 255 255 / 0.1);
+      color: #cbd5e1;
+      margin-bottom: 2rem;
+    }
+
+    .instructions h2,
+    .instructions h3 {
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    ol,
+    ul {
+      padding-left: 1.6rem;
+      margin-bottom: 1.2rem;
+      color: #cbd5e1;
+    }
+
+    code {
+      background: #272c48;
+      padding: 0.4em 0.75em;
+      border-radius: 24px;
+      font-family: 'Source Code Pro', monospace, monospace;
+      color: #99ccff;
+      font-weight: 600;
+      box-shadow: inset 0 0 6px #6272ff66;
+      user-select: all;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      font-size: 0.8rem;
+    }
+
+    code:hover {
+      background-color: #334155;
+    }
+
+    /* Increase vertical spacing between location example codes */
+    .instructions code+br {
+      margin-bottom: 1.8rem;
+      display: block;
+      content: "";
+    }
+
+    /* Leaflet popup styling */
+    .leaflet-popup-content-wrapper {
+      background: #1e293b;
+      color: #cbd5e1;
+      border-radius: 24px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.02em;
+      transition: opacity 0.25s ease;
+    }
+
+    .leaflet-popup-tip {
+      background: #1e293b;
+    }
+
+    .leaflet-control-attribution {
+      color: #94a3b8 !important;
+      font-size: 0.8rem;
+    }
+
+    /* Smooth fade for popup */
+    .leaflet-popup {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .leaflet-popup.open {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Light Around Project🔥</h1>
+  <img src="icon.png" alt="Light Around Icon" class="header-image" />
+
+  <p>This is a fun, global experiment. Each lighter has a QR code leading here. When you receive one, take a photo,
+    post it, and pass it on!</p>
+
+  <div id="map"></div>
+
+  <div class="instructions">
+    <h2>📸 How to Join</h2>
+    <ol>
+      <li>Take a photo with the lighter and your surroundings.</li>
+      <li>Post it on Instagram, Twitter, or TikTok.</li>
+      <li>Use the hashtag <code>#LightAroundProject</code>.</li>
+      <li>Include your location in the caption using this format:</li>
+    </ol>
+    <p><strong>Example:</strong></p>
+    <code>Location: Berlin, Germany</code>
+    <div class="spacer"></div>
+    <code>Location: 52.5200, 13.4050</code>
+
+    <h3>🗺️ Want to appear on the map?</h3>
+    <p>We update the map manually from public posts. Just make sure:</p>
+    <ul>
+      <li>Your post is public</li>
+      <li>You use <code>#LightAroundProject</code></li>
+      <li>You include a city or coordinates in the format above</li>
+    </ul>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([48.5, 19.0], 5);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: 'abcd',
+    }).addTo(map);
+
+    const locations = [
+      { name: 'Budapest, Hungary', coords: [47.4979, 19.0402] },
+      { name: 'Cluj-Napoca, Romania', coords: [46.7712, 23.6236] }
+    ];
+
+    locations.forEach((loc) => {
+      const marker = L.marker(loc.coords).addTo(map);
+      marker.bindPopup(`<b>${loc.name}</b>`, {
+        autoClose: false,
+        closeOnClick: false,
+        className: 'custom-popup'
+      });
+
+      // Open popup on hover
+      marker.on('mouseover', function () {
+        this.openPopup();
+      });
+      marker.on('mouseout', function () {
+        this.closePopup();
+      });
+    });
+  </script>
+</body>
+
+</html>
