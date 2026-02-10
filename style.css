@@ -25,6 +25,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -230,6 +231,7 @@ body {
 }
 
 #map {
+  position: relative;
   height: 560px;
   width: 100%;
   border-radius: 18px;
@@ -344,6 +346,31 @@ body {
 
 .leaflet-control-attribution a {
   color: var(--text-sec) !important;
+}
+
+/* Map touch hint (mobile) */
+.map-touch-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(20, 24, 32, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  color: var(--text-sec);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.45em 1em;
+  border-radius: 20px;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.map-touch-hint--hidden {
+  opacity: 0;
 }
 
 /* ============================================
@@ -682,6 +709,6 @@ body {
   }
 
   .footer-hashtag {
-    font-size: clamp(2.5rem, 14vw, 5rem);
+    font-size: clamp(2.5rem, 11vw, 5rem);
   }
 }

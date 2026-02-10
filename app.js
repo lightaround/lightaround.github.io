@@ -146,6 +146,61 @@
     map.scrollWheelZoom.enable();
   });
 
+  // Mobile: tap-to-interact behavior
+  // Map starts non-interactive so page scrolling works normally.
+  // Tap activates dragging for a few seconds, then auto-deactivates.
+  if ('ontouchstart' in window) {
+    var mapEl = document.getElementById('map');
+    map.dragging.disable();
+    mapEl.style.touchAction = 'auto';
+
+    var hint = document.createElement('div');
+    hint.className = 'map-touch-hint';
+    hint.textContent = 'Tap to interact';
+    mapEl.appendChild(hint);
+
+    var mapActive = false;
+    var deactivateTimer;
+
+    function activateMap() {
+      if (mapActive) { resetDeactivateTimer(); return; }
+      mapActive = true;
+      map.dragging.enable();
+      mapEl.style.touchAction = 'none';
+      hint.classList.add('map-touch-hint--hidden');
+      resetDeactivateTimer();
+    }
+
+    function deactivateMap() {
+      mapActive = false;
+      map.dragging.disable();
+      mapEl.style.touchAction = 'auto';
+      hint.classList.remove('map-touch-hint--hidden');
+      clearTimeout(deactivateTimer);
+    }
+
+    function resetDeactivateTimer() {
+      clearTimeout(deactivateTimer);
+      deactivateTimer = setTimeout(deactivateMap, 4000);
+    }
+
+    map.on('click', activateMap);
+    map.on('popupopen', activateMap);
+
+    map.on('movestart', function () {
+      if (mapActive) clearTimeout(deactivateTimer);
+    });
+    map.on('moveend', function () {
+      if (mapActive) resetDeactivateTimer();
+    });
+
+    window.addEventListener('scroll', function () {
+      if (!mapActive) return;
+      var rect = mapEl.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) deactivateMap();
+    }, { passive: true });
+  }
+
   /* ==========================================
      Counter animation
      ========================================== */
